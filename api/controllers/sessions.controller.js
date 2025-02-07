@@ -12,7 +12,8 @@ module.exports.create = async (req, res, next) => {
   }
 
   // 2. check password
-  const isPasswordValid = await user.comparePassword(password);
+const isPasswordValid = await user.checkPassword(password);
+
   if (!isPasswordValid) {
     return next(createError(401, "Credenciales inválidas"));
   }
