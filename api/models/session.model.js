@@ -1,24 +1,18 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const schema = new mongoose.Schema(
-  {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      // TODO: reference to user model
-    },
-    lastAccess: {
-      type: Date,
-      default: Date.now,
-    },
+const sessionSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
-  {
-    timestamps: true,
-  }
-);
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    expires: 3600 // 1 hour
+  },
+  lastAccess: { type: Date, default: Date.now }
+});
 
-// delete session after lastAccess + 1h
-schema.index({ lastAccess: 1 }, { expireAfterSeconds: 3600 });
-
-const Session = mongoose.model("Session", schema);
-
+const Session = mongoose.model('Session', sessionSchema);
 module.exports = Session;

@@ -2,15 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const createError = require("http-errors");
-const users = require("../controllers/users.controller");
-const sessions = require("../controllers/sessions.controller");
-const auth = require("../middlewares/session.middleware");
+const usersRouter = require('../routes/users.routes');
+const sessionsRouter = require('../routes/sessions.routes');
+const sessionMiddleware = require("../middlewares/session.middleware");
 
-router.post("/users", users.create);
-router.get("/users/me", auth.checkSession, users.profile);
-
-router.post("/sessions", sessions.create);
-router.delete("/sessions", auth.checkSession, sessions.destroy);
+router.use('/users', usersRouter);
+router.use('/sessions', sessionsRouter);
 
 router.use((req, res, next) => {
   next(createError(404, "Route not found"));

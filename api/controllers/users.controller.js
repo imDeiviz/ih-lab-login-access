@@ -20,6 +20,20 @@ module.exports.create = async (req, res, next) => {
   }
 };
 
+module.exports.register = async (req, res, next) => {
+  const { name, email, password, role } = req.body;
+
+  try {
+    const user = await User.create({ name, email, password, role });
+    res.status(201).json(user);
+  } catch (error) {
+    if (error.code === 11000) {
+      next(createError(400, "El email ya está registrado"));
+    } else {
+      next(error);
+    }
+  }
+};
 
 module.exports.profile = (req, res, next) => {
   // access current request user
@@ -35,4 +49,8 @@ module.exports.profile = (req, res, next) => {
       res.json({ email: user.email }); // Retornar solo el email por razones de seguridad
     })
     .catch(err => next(err));
+};
+
+module.exports.getProfile = (req, res, next) => {
+  res.status(200).json(req.user);
 };

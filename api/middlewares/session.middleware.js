@@ -1,23 +1,17 @@
-const Session = require("../models/session.model");
-const createError = require("http-errors");
+const Session = require('../models/session.model');
 
-module.exports.checkSession = (req, res, next) => {
-  // find session id from cookie. imagine cookie is "session=1234; other=5678"
-  const sessionId = "TO DO!";
-
-  if (!sessionId) {
-    next(createError(401, "missing session from cookie header"));
+module.exports = (req, res, next) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: 'No autorizado' });
   }
 
-  // 1. find session by ID
-  // 2. populate user field
-  // 3. update session last access
-  // 5. save session
-  // 6. leave user on req object
-  // 7. leave session on req object
-  // 8. continue to next middleware or controller
-  // 9. handle errors with 401 code
-
-  // TODO: remove this line when done
-  next();
+  Session.findById(req.session.userId)
+    .then(session => {
+      if (!session) {
+        return res.status(401).json({ message: 'No autorizado' });
+      }
+      req.user = session.userId;
+      next();
+    })
+    .catch(err => next(err));
 };

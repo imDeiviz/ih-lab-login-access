@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema(
         },
       },
     },
+    role: { type: String, enum: ["user", "admin"], default: "user" }
   },
   {
     timestamps: true,
@@ -63,18 +64,11 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    bcrypt
-      .hash(this.password, SALT_WORK_FACTOR)
-      .then((hash) => {
-        this.password = hash;
-        next();
-      })
-      .catch((error) => next(error));
-  } else {
-    next();
+    this.password = await bcrypt.hash(this.password, 10);
   }
+  next();
 });
 
 userSchema.methods.checkPassword = function (passwordToCheck) {
