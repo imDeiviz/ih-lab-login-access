@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { login } from "../../services/api-service";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,31 +16,37 @@ export default function Login() {
       await login({ email, password });
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Credenciales inválidas");
+      setError(err.response?.data?.message || "Error al iniciar sesión");
     }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <button type="submit">Login</button>
+    <div className="container mt-5">
+      <h1 className="text-center mb-4">Login</h1>
+      <form onSubmit={handleSubmit} className="w-50 mx-auto">
+        <div className="mb-3">
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <input
+            type="password"
+            className="form-control"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+          />
+        </div>
+        <button type="submit" className="btn btn-primary w-100">Login</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="text-danger text-center mt-3">{error}</p>}
     </div>
   );
 }
