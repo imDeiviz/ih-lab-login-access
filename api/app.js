@@ -1,6 +1,4 @@
 require("dotenv").config();
-console.log("MONGODB_URI:", process.env.MONGODB_URI); // Verificar que la variable esté cargada
-console.log("SESSION_SECRET:", process.env.SESSION_SECRET); // Verificar que la variable esté cargada
 
 const express = require("express");
 const logger = require("morgan");
@@ -39,9 +37,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 .catch(err => console.error('Error al conectar a MongoDB', err));
 
 /* API Routes Configuration */
-const routes = require("./config/routes.config");
+const routesConfig = require("./config/routes.config");
 
-app.use("/api/v1", routes);
+app.use("/api/v1", routesConfig);
 
 /* Manejo de errores */
 app.use((err, req, res, next) => {

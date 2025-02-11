@@ -6,7 +6,6 @@ import Register from "./pages/register/register";
 function App() {
   return (
     <Routes>
-      {/* Routes go here */}
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Register />} />

@@ -36,7 +36,6 @@ module.exports.register = async (req, res, next) => {
 };
 
 module.exports.profile = (req, res, next) => {
-  // access current request user
   if (!req.session || !req.session.userId) {
     return res.status(401).json({ message: "No autorizado" });
   }
@@ -53,4 +52,14 @@ module.exports.profile = (req, res, next) => {
 
 module.exports.getProfile = (req, res, next) => {
   res.status(200).json(req.user);
+};
+
+exports.user = (req, res) => {
+  // Your logic for handling the user creation
+  res.send('User created');
+};
+
+exports.profile = (req, res) => {
+  // Your logic for handling the user profile
+  res.send('User profile');
 };
