@@ -13,11 +13,19 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null); // Reset error state before attempting registration
+
+    // Basic frontend validation for password
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordPattern.test(password)) {
+      setError("La contraseña debe tener al menos ocho caracteres, incluyendo al menos una letra y un número.");
+      return;
+    }
+
     try {
       await register({ name, email, password });
       navigate("/login");
-    } catch (err) {
-      setError(err.response?.data?.message || "Error al registrar el usuario");
+    } catch {
+      setError("Credenciales no válidas");
     }
   };
 

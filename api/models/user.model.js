@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const SALT_WORK_FACTOR = 10;
 const EMAIL_PATTERN =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_PATTERN = /^.{8,}$/;
+const PASSWORD_PATTERN = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
 const userSchema = new mongoose.Schema(
   {
@@ -25,7 +25,12 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "User password is required"],
-      match: [PASSWORD_PATTERN, "Invalid user password pattern"],
+      validate: {
+        validator: function (v) {
+          return PASSWORD_PATTERN.test(v);
+        },
+        message: (props) => `${props.value} is not a valid password!`,
+      },
     },
     avatar: {
       type: String,
