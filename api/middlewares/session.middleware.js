@@ -1,17 +1,19 @@
-const Session = require('../models/session.model');
+const User = require('../models/user.model');
 
-module.exports = (req, res, next) => {
-  if (!req.session.userId) {
+module.exports = async (req, res, next) => {
+
+  if (!req.session || !req.session.userId) {
     return res.status(401).json({ message: 'No autorizado' });
   }
 
-  Session.findById(req.session.userId)
-    .then(session => {
-      if (!session) {
-        return res.status(401).json({ message: 'No autorizado' });
-      }
-      req.user = session.userId;
-      next();
-    })
-    .catch(err => next(err));
+  try {
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(401).json({ message: 'No autorizado' });
+    }
+    req.user = user; // Almacenar el usuario en la solicitud
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
